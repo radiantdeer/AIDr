@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.jackandphantom.circularprogressbar.CircleProgressbar
+        android:id="@+id/distanceSpinner"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:cpb_backgroundProgressWidth="0"
+        app:cpb_foregroundProgressColor="#c9cdd3"
+        app:cpb_foregroundProgressWidth="20"
+        app:cpb_progress="75"
+        app:cpb_roundedCorner="false"
+        app:cpb_touchEnabled="true"
+        app:layout_constraintEnd_toStartOf="@+id/stepSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.jackandphantom.circularprogressbar.CircleProgressbar
+        android:id="@+id/caloriesSpinner"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:cpb_backgroundProgressWidth="0"
+        app:cpb_foregroundProgressColor="#c9cdd3"
+        app:cpb_foregroundProgressWidth="20"
+        app:cpb_progress="75"
+        app:cpb_roundedCorner="false"
+        app:cpb_touchEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stepSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.jackandphantom.circularprogressbar.CircleProgressbar
+        android:id="@+id/stepSpinner"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:cpb_backgroundProgressWidth="0"
+        app:cpb_foregroundProgressColor="#c9cdd3"
+        app:cpb_foregroundProgressWidth="20"
+        app:cpb_progress="75"
+        app:cpb_roundedCorner="false"
+        app:cpb_touchEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.jackandphantom.circularprogressbar.CircleProgressbar
+        android:id="@+id/heartRateLogo"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="16dp"
+        app:cpb_backgroundProgressWidth="0"
+        app:cpb_foregroundProgressColor="#000000"
+        app:cpb_foregroundProgressWidth="5"
+        app:cpb_progress="100"
+        app:cpb_roundedCorner="false"
+        app:cpb_touchEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/textView11"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:text="Don't Forget to Exercise Today!"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Your Daily Activity"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="2.4 km"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/distanceSpinner"
+        app:layout_constraintStart_toStartOf="@+id/distanceSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/distanceSpinner" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="1000 steps"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/stepSpinner"
+        app:layout_constraintStart_toStartOf="@+id/stepSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/stepSpinner" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="1234.0 kcal"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/caloriesSpinner"
+        app:layout_constraintStart_toStartOf="@+id/caloriesSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/caloriesSpinner" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Your Heartrate"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="80 - 120 bpm"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/heartRateLogo"
+        app:layout_constraintStart_toEndOf="@+id/heartRateLogo"
+        app:layout_constraintTop_toTopOf="@+id/heartRateLogo" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Did you know?"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heartRateLogo" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="In October 1995, Lorem ipsum is dolor sir amet."
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/distanceSpinner"
+        app:layout_constraintEnd_toEndOf="@+id/distanceSpinner"
+        app:layout_constraintStart_toStartOf="@+id/distanceSpinner"
+        app:layout_constraintTop_toTopOf="@+id/distanceSpinner"
+        app:srcCompat="@drawable/ic_directions_run_black_24dp" />
+
+</android.support.constraint.ConstraintLayout>

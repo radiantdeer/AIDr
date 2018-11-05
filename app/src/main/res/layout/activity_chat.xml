@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="43dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:onClick="closeChat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="492dp"
+        android:layout_above="@+id/input"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:incomingTextColor="@color/black"
+        app:incomingTextSize="14sp"
+        app:incomingDefaultBubbleColor="#c9cdd3"
+        app:outcomingTextColor="@color/black"
+        app:outcomingTextSize="14sp"
+        app:outcomingDefaultBubbleColor="#dee3ec"
+        />
+
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:id="@+id/input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginBottom="8dp"
+        app:inputButtonHeight="0dp"
+        app:inputButtonWidth="0dp"
+        app:inputHint="Talk to AIDr..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/attachButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton6"
+        app:layout_constraintStart_toEndOf="@+id/input"
+        app:layout_constraintTop_toBottomOf="@+id/messagesList"
+        app:srcCompat="@drawable/ic_attach_file_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesList"
+        app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
+
+</android.support.constraint.ConstraintLayout>
