@@ -17,12 +17,13 @@ import android.widget.TextView;
 
 public class AIDrChat extends FragmentActivity {
 
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 3; // Number of tabs
 
     private ViewPager mPager;
 
     private PagerAdapter mPagerAdapter;
 
+    // Tab-texts
     private TextView reminder;
     private TextView chat;
     private TextView tips;
@@ -55,11 +56,13 @@ public class AIDrChat extends FragmentActivity {
         super.onBackPressed();
     }
 
+    // Launch addReminder activity
     public void launchAddReminder(View view) {
         Intent intent = new Intent(this, AddReminder.class);
         startActivity(intent);
     }
 
+    // Launch chat activity
     public void launchChat(View view) {
         int buttonType;
         if (view.getId() == R.id.speechButton) {
@@ -72,6 +75,11 @@ public class AIDrChat extends FragmentActivity {
         startActivity(intent);
     }
 
+    /* switchTo* -> switch current tab to *
+       What these functions do are :
+       - Switch the ViewPager (mPager) to the desired tab
+       - Highlight the appropriate tab-text
+     */
     public void switchToReminder(View view) {
         mPager.setCurrentItem(0);
         changeActiveTab(0);
@@ -87,6 +95,7 @@ public class AIDrChat extends FragmentActivity {
         changeActiveTab(2);
     }
 
+    /* ViewPager tab controller */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -110,6 +119,10 @@ public class AIDrChat extends FragmentActivity {
         }
     }
 
+    /* Highlights the desired tab-text
+    *  0 -> reminder tab
+    *  1 -> chat tab
+    *  2 -> tips tab */
     public void changeActiveTab(int position) {
         reminder.setTextColor(Color.rgb(0, 0, 0));
         chat.setTextColor(Color.rgb(0, 0, 0));

@@ -58,24 +58,14 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*
-        cv = (ChatView) findViewById(R.id.chat_view);
-        cv.setOnSentMessageListener(new ChatView.OnSentMessageListener() {
-            @Override
-            public boolean sendMessage(final ChatMessage cm) {
-                // do nothing, automatically adds msg
-
-                return true;
-            }
-        });
-        */
     }
 
+    /* close this activity -> return to main activity (which is AIDrChat) */
     public void closeChat(View view) {
         finish();
     }
 
+    /* Author data structure - represents the sender of a message */
     private class Author implements IUser {
 
         private String id;
@@ -104,6 +94,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /* Message data structure - represents a message */
     private class Message implements IMessage {
 
         private String text;
@@ -140,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /* Process message from user */
     public void respondChat(String query) {
         Message m = new Message("You sent : " + query, "1", system, new Date());
         adapter.addToStart(m, true);

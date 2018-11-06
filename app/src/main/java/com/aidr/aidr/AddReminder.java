@@ -33,15 +33,18 @@ public class AddReminder extends AppCompatActivity {
 
     }
 
+    /* Save reminder */
     public void saveReminder(View view) {
 
         switchToMain(view);
     }
 
+    // Close this activity -> return to main activity, which is AiDrChat
     public void switchToMain(View view) {
         finish();
     }
 
+    // Pops up dialog to show time picker -> NOT DONE YET
     public void showTimePicker(View view) {
         final Dialog timeDialog = new Dialog(view.getContext());
         timeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -50,6 +53,7 @@ public class AddReminder extends AppCompatActivity {
         timeDialog.setCancelable(true);
     }
 
+    // Pops up calendar picker dialog
     public void showCalendarPicker(View view) {
         final Dialog calDialog = new Dialog(view.getContext());
         calDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -57,8 +61,10 @@ public class AddReminder extends AppCompatActivity {
         calDialog.setCanceledOnTouchOutside(true);
         calDialog.setCancelable(true);
 
+        // Confirmation button
         Button confirm = (Button) calDialog.findViewById(R.id.confirmButton);
 
+        // Set listener when user picks a date - saves the date temporarily
         ((CalendarView)calDialog.getWindow().findViewById(R.id.calendarView)).setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -68,6 +74,7 @@ public class AddReminder extends AppCompatActivity {
             }
         });
 
+        // Set click listener for confirmation button
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
