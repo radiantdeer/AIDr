@@ -25,7 +25,7 @@ This list is subject to change, as files may grow/shrink.
 
 ### Currently Working
 - Chatting : For now, app will "mirror" your message
-- Calendar picker for add reminder
+- Calendar & time picker for add reminder
 
 ### Incoming
 - Speech-to-text, and *vice versa*
@@ -33,7 +33,6 @@ This list is subject to change, as files may grow/shrink.
 - Chat history : currently chats are gone if the back button is pressed/phone is rotated/app is closed
 - All of planned chatting functionalities : diagnosing, disease & drug explainer, hospital location
 - Reminder lists
-- Time picker for add reminder feature
 - Save reminders
 - Settings (?)
 
