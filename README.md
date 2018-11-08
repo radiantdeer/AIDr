@@ -16,9 +16,10 @@ This list is subject to change, as files may grow/shrink.
 |---------------------|-------------------------|----------------------|
 |AIDrChat.java        |activity_aidr_chat       |The main activity     |
 |ReminderFragment.java|reminder                 |The main reminder tab |
+|Reminder.java        |                         |Data structure/representation of reminders|
 |ChatFragment.java    |chat                     |The main chat tab     |
 |TipsFragment.java    |tips                     |The main tips tab     |
-|AddReminder.java     |activity_add_reminder, calendar_picker    |View & controller for adding reminders|
+|AddReminder.java     |activity_add_reminder2, calendar_picker    |View & controller for adding reminders|
 |ChatActivity.java    |activity_chat            |View & controller for the chatting feature| 
 
 ## What Works & What Doesn't Work
@@ -26,14 +27,15 @@ This list is subject to change, as files may grow/shrink.
 ### Currently Working
 - Chatting : For now, app will "mirror" your message
 - Calendar & time picker for add reminder
+- Save Reminders : Reminders are saved, but for now, it will only show reminder count. Also, if application is uninstalled, saved reminders are purged.
 
 ### Incoming
 - Speech-to-text, and *vice versa*
 - "Dummy" file upload
 - Chat history : currently chats are gone if the back button is pressed/phone is rotated/app is closed
 - All of planned chatting functionalities : diagnosing, disease & drug explainer, hospital location
-- Reminder lists
-- Save reminders
+- Show created reminders
+- *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
 - Settings (?)
 
 ## Libraries Used

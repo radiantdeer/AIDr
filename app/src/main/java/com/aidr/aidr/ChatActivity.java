@@ -1,10 +1,12 @@
 package com.aidr.aidr;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
@@ -16,22 +18,34 @@ import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
-    public String userid = "5005";
-    public String name = "You";
+    private String userid = "5005";
+    private String name = "You";
     private Author system = new Author("8899","AIDr",null);
-    public MessagesListAdapter<Message> adapter;
+    private MessagesListAdapter<Message> adapter;
+    private boolean speechMode = true;
+    private MessageInput chatInput;
+    private MessagesList chatList;
+    private ImageButton attachFileBtn;
+    private ImageButton switchModeBtn;
+    private ImageButton speechInputBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        adapter = new MessagesListAdapter<>(userid,null);
-        ((MessagesList) findViewById(R.id.messagesList)).setAdapter(adapter);
 
-        final MessageInput mi = (MessageInput) findViewById(R.id.input);
+        adapter = new MessagesListAdapter<>(userid,null);
+        chatList = ((MessagesList) findViewById(R.id.messagesList));
+        chatList.setAdapter(adapter);
+
+        /* Linking it's output representative to logic representation */
+        chatInput = (MessageInput) findViewById(R.id.input);
+        attachFileBtn = (ImageButton) findViewById(R.id.attachButton);
+        switchModeBtn = (ImageButton) findViewById(R.id.switchModeButton);
+        speechInputBtn = (ImageButton) findViewById(R.id.talkButton);
 
         /* Submit listener */
-        mi.setInputListener(new MessageInput.InputListener() {
+        chatInput.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(final CharSequence input) {
                 Message msg = new Message(input.toString(),"lel",new Author(userid,name,null), new Date());
@@ -48,16 +62,42 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         /* Invoke submit on enter */
-        mi.getInputEditText().setOnKeyListener(new View.OnKeyListener() {
+        chatInput.getInputEditText().setOnKeyListener(new View.OnKeyListener() {
 
             public boolean onKey(View view, int keyCode, KeyEvent ke) {
                 if ((ke.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    mi.getButton().callOnClick();
+                    chatInput.getButton().callOnClick();
                     return true;
                 }
                 return false;
             }
         });
+
+        int buttonType = getIntent().getIntExtra(AIDrChat.EXTRA_MSG_CHAT,1);
+
+        /* Notice that we actually assign inverted values here.
+           This is because speechMode will be inverted again when invoking switchMode. */
+        speechMode = (buttonType == 1);
+
+        /* Set input mode */
+        switchMode(switchModeBtn);
+    }
+
+    public void switchMode(View view) {
+        speechMode = !speechMode;
+        if (speechMode) {
+            chatInput.setVisibility(View.INVISIBLE);
+            attachFileBtn.setVisibility(View.INVISIBLE);
+
+            speechInputBtn.setVisibility(View.VISIBLE);
+            switchModeBtn.setImageResource(R.drawable.ic_keyboard_black_24dp);
+        } else {
+            speechInputBtn.setVisibility(View.INVISIBLE);
+            switchModeBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
+
+            chatInput.setVisibility(View.VISIBLE);
+            attachFileBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     /* close this activity -> return to main activity (which is AIDrChat) */
@@ -102,6 +142,12 @@ public class ChatActivity extends AppCompatActivity {
         private Author author;
         private Date tstamp;
 
+        public Message(String text, String id, Author author) {
+            this.text = text;
+            this.id = id;
+            this.author = author;
+        }
+
         public Message(String text, String id, Author author, Date tstamp) {
             this.text = text;
             this.id = id;
@@ -132,8 +178,19 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /* Process message from user */
-    public void respondChat(String query) {
-        Message m = new Message("You sent : " + query, "1", system, new Date());
-        adapter.addToStart(m, true);
+    public void respondChat(final String query) {
+        /* Is-typing "effect" */
+        final Message loading = new Message("AIDr is typing...","0",system, new Date());
+        adapter.addToStart(loading, true);
+
+        /* Send actual data */
+        (new Handler()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.delete(loading);
+                Message m = new Message("You sent : " + query, "1", system, new Date());
+                adapter.addToStart(m, true);
+            }
+        }, 1500);
     }
 }

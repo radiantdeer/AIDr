@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="36dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="3dp"
         android:ems="10"
         android:hint="Title"
         android:inputType="textPersonName"
@@ -66,7 +66,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/additionalText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

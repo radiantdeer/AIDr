@@ -2,6 +2,7 @@ package com.aidr.aidr;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +10,16 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,6 +34,9 @@ public class AddReminder extends AppCompatActivity {
     public int tempMinute;
     private SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd, yyyy");
     private SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+    private EditText chosenTitle;
+    private EditText chosenDosage;
+    private EditText additionalNotes;
     private TextView chosenDateText;
     private TextView chosenTimeText;
 
@@ -33,6 +44,10 @@ public class AddReminder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder2);
+
+        chosenTitle = (EditText) findViewById(R.id.titleText);
+        chosenDosage = (EditText) findViewById(R.id.dosageText);
+        additionalNotes = (EditText) findViewById(R.id.additionalText);
 
         selectedDate = new Date();
 
@@ -47,7 +62,29 @@ public class AddReminder extends AppCompatActivity {
 
     /* Save reminder */
     public void saveReminder(View view) {
+        Reminder test = new Reminder(chosenTitle.getText().toString(),chosenDosage.getText().toString(),selectedDate,additionalNotes.getText().toString());
 
+        FileOutputStream ostream = null;
+        try {
+            ostream = openFileOutput(ReminderFragment.filename, Context.MODE_PRIVATE);
+        } catch (Exception e) {
+            // should not happen, file is guaranteed to be available
+            e.printStackTrace();
+        }
+
+        if (ostream != null) {
+            JSONArray allReminders = ReminderFragment.currReminders;
+            try {
+                allReminders.put(new JSONObject(test.toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                ostream.write(allReminders.toString().getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         switchToMain(view);
     }
 
@@ -145,4 +182,5 @@ public class AddReminder extends AppCompatActivity {
         }
 
     }
+
 }
