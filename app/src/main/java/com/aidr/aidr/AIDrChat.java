@@ -28,6 +28,8 @@ public class AIDrChat extends FragmentActivity {
     private TextView chat;
     private TextView tips;
 
+    public final static String EXTRA_MSG_CHAT = "buttonPressed";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +73,7 @@ public class AIDrChat extends FragmentActivity {
             buttonType = 1;
         }
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("buttonPressed",buttonType);
+        intent.putExtra(EXTRA_MSG_CHAT,buttonType);
         startActivity(intent);
     }
 
@@ -98,6 +100,10 @@ public class AIDrChat extends FragmentActivity {
     /* ViewPager tab controller */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
+        private ReminderFragment reminderTab = new ReminderFragment();
+        private ChatFragment chatTab = new ChatFragment();
+        private TipsFragment tipsTab = new TipsFragment();
+
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -105,11 +111,11 @@ public class AIDrChat extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new ReminderFragment();
+                return reminderTab;
             } else if (position == 1) {
-                return new ChatFragment();
+                return chatTab;
             } else { //position == 2
-                return new TipsFragment();
+                return tipsTab;
             }
         }
 

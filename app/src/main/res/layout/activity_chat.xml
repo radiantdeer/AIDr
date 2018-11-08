@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/backButton"
         android:layout_width="43dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
@@ -21,21 +21,22 @@
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
-        android:layout_height="492dp"
+        android:layout_height="0dp"
         android:layout_above="@+id/input"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        app:incomingDefaultBubbleColor="#c9cdd3"
+        app:incomingTextColor="@color/black"
+        app:incomingTextSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:incomingTextColor="@color/black"
-        app:incomingTextSize="14sp"
-        app:incomingDefaultBubbleColor="#c9cdd3"
-        app:outcomingTextColor="@color/black"
-        app:outcomingTextSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/backButton"
         app:outcomingDefaultBubbleColor="#dee3ec"
-        />
+        app:outcomingTextColor="@color/black"
+        app:outcomingTextSize="14sp" />
 
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
@@ -62,21 +63,38 @@
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton6"
+        app:layout_constraintEnd_toStartOf="@+id/switchModeButton"
         app:layout_constraintStart_toEndOf="@+id/input"
         app:layout_constraintTop_toBottomOf="@+id/messagesList"
         app:srcCompat="@drawable/ic_attach_file_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton6"
+        android:id="@+id/switchModeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
+        android:onClick="switchMode"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesList"
+        app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/talkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesList"
         app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
 
