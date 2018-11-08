@@ -27,15 +27,15 @@ This list is subject to change, as files may grow/shrink.
 ### Currently Working
 - Chatting : For now, app will "mirror" your message
 - Calendar & time picker for add reminder
-- Save Reminders : Reminders are saved, but for now, it will only show reminder count. Also, if application is uninstalled, saved reminders are purged.
+- Reminders : able to list reminders made & create new reminders
 
 ### Incoming
 - Speech-to-text, and *vice versa*
 - "Dummy" file upload
 - Chat history : currently chats are gone if the back button is pressed/phone is rotated/app is closed
 - All of planned chatting functionalities : diagnosing, disease & drug explainer, hospital location
-- Show created reminders
 - *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
+- Push-notify of reminders
 - Settings (?)
 
 ## Libraries Used

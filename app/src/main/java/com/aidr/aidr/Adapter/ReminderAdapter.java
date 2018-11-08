@@ -12,13 +12,17 @@ import android.widget.TextView;
 import com.aidr.aidr.Model.Reminder;
 import com.aidr.aidr.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder> {
     private Context context;
-    private ArrayList<Reminder> reminders;
+    private JSONArray reminders;
 
-    public ReminderAdapter(Context context, ArrayList<Reminder> reminders) {
+    public ReminderAdapter(Context context, JSONArray reminders) {
         this.context = context;
         this.reminders = reminders;
     }
@@ -32,13 +36,23 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
-        holder.mTitleTextView.setText(reminders.get(i).getTitle());
-        holder.mDosageTextView.setText(reminders.get(i).getDosage());
+        String title = "";
+        String dosage = "";
+        try {
+            JSONObject currentElement = (JSONObject) reminders.get(i);
+            title = (String) currentElement.get("title");
+            dosage = (String) currentElement.get("dosage");
+        } catch (JSONException je) {
+            // do nothing, this is guaranteed to work
+        }
+
+        holder.mTitleTextView.setText(title);
+        holder.mDosageTextView.setText(dosage);
     }
 
     @Override
     public int getItemCount() {
-        return reminders.size();
+        return reminders.length();
     }
 
     class Holder extends RecyclerView.ViewHolder {

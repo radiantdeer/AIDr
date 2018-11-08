@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 
@@ -22,16 +21,11 @@ import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 
 import com.aidr.aidr.Adapter.ReminderAdapter;
-import com.aidr.aidr.Model.Reminder;
-
-import java.util.ArrayList;
 
 public class ReminderFragment extends Fragment {
     private RecyclerView recyclerView;
     private ReminderAdapter reminderAdapter;
-    private ArrayList<Reminder> reminders = new ArrayList<>();
 
-    private TextView testText;
     private File file;
     final static public String filename = "reminders.json";
     public static JSONArray currReminders = null;
@@ -47,29 +41,24 @@ public class ReminderFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Add dummy data for experimental
-        for (int i = 0; i < 5; i++){
-            reminders.add(new Reminder("Medicine Title", "50 mg orally as needed for pain"));
-        }
-
-        //assign ReminderAdapter
-        reminderAdapter = new ReminderAdapter(getContext(), reminders);
-
-        //use findViewById for reference to xml view
-        recyclerView = view.findViewById(R.id.rv_reminder_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(reminderAdapter);
-
         //retrieve from database
         refreshReminders();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        testText = (TextView) getView().findViewById(R.id.testText);
         refreshReminders();
+
+        //assign ReminderAdapter
+        reminderAdapter = new ReminderAdapter(getContext(), currReminders);
+
+        //use findViewById for reference to xml view
+        recyclerView = getView().findViewById(R.id.rv_reminder_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(reminderAdapter);
     }
 
     public void checkIfRemindersExists() {
@@ -126,8 +115,7 @@ public class ReminderFragment extends Fragment {
         if (currReminders == null) {
             getRemindersFromFile();
         }
-        String output = "Reminders : " + currReminders.length();
-        testText.setText(output);
+
     }
 
 }
