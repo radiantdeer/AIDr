@@ -14,29 +14,35 @@ This list is subject to change, as files may grow/shrink.
 
 |Name                 |Related XML (layout) file|Description           |
 |---------------------|-------------------------|----------------------|
-|AIDrChat.java        |activity_aidr_chat       |The main activity     |
-|ReminderFragment.java|reminder                 |The main reminder tab |
 |Adapter/ReminderAdapter.java|item_card_reminder|Adapter for viewing reminders|
+|Adapter/DiseaseMessageViewHolder.java|         |Adapter/controller for chat viewing a disease|
+|Adapter/OutMessageViewHolder.java|             |Adapter/controller for outgoing chat (although it's "unused")|
 |Model/Reminder.java  |                         |Data structure/representation of reminders|
 |Model/Message.java   |                         |Data structure/representation of messages|
 |Model/Author.java    |                         |Data structure/representation of author of messages|
+|AddReminder.java     |activity_add_reminder2, calendar_picker|View & controller for adding reminders|
+|AIDrChat.java        |activity_aidr_chat       |The main activity     |
+|ChatActivity.java    |activity_chat, chat_bubble_*|View & controller for the chatting feature| 
 |ChatFragment.java    |chat                     |The main chat tab     |
+|DiseaseDB.java       |                         |Used as an "interface" to disease database|
+|DiseaseExplainer.java|activity_disease_explainer|Used to show details about a disease|
+|ReminderFragment.java|reminder                 |The main reminder tab |
 |TipsFragment.java    |tips                     |The main tips tab     |
-|AddReminder.java     |activity_add_reminder2, calendar_picker    |View & controller for adding reminders|
-|ChatActivity.java    |activity_chat            |View & controller for the chatting feature| 
+
+
 
 ## What Works & What Doesn't Work
 
 ### Currently Working
-- Chatting : For now, app will "mirror" your message
-- Chat history : will consider for other chat content types
-- Calendar & time picker for add reminder
+- Chatting : system can show disease if user types in the disease. Other than that, the system just mirrors the message.
+- Disease Explainer
+- Chat history
 - Reminders : able to list reminders made & create new reminders
 
 ### Incoming
 - Speech-to-text, and *vice versa*
 - "Dummy" file upload
-- All of planned chatting functionalities : diagnosing, disease & drug explainer, hospital location
+- All of planned chatting functionalities : diagnosing, drug explainer, hospital location
 - *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
 - Push-notify of reminders
 - Settings (?)

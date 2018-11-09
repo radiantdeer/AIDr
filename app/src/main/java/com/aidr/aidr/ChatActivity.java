@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.aidr.aidr.Model.Author;
-import com.aidr.aidr.Model.DiseaseMessageViewHolder;
+import com.aidr.aidr.Adapter.DiseaseMessageViewHolder;
 import com.aidr.aidr.Model.Message;
-import com.aidr.aidr.Model.OutMessageViewHolder;
+import com.aidr.aidr.Adapter.OutMessageViewHolder;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;

@@ -1,4 +1,4 @@
-package com.aidr.aidr.Model;
+package com.aidr.aidr.Adapter;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.aidr.aidr.DiseaseDB;
 import com.aidr.aidr.DiseaseExplainer;
+import com.aidr.aidr.Model.Message;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import org.json.JSONObject;
