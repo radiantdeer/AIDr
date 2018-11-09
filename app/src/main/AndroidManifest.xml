@@ -20,7 +20,11 @@
         </activity>
         <activity android:name=".Reminder" />
         <activity android:name=".AddReminder" />
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity
+            android:name=".DiseaseExplainer"
+            android:label="@string/title_activity_disease_explainer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

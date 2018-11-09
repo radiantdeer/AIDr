@@ -18,6 +18,8 @@ This list is subject to change, as files may grow/shrink.
 |ReminderFragment.java|reminder                 |The main reminder tab |
 |Adapter/ReminderAdapter.java|item_card_reminder|Adapter for viewing reminders|
 |Model/Reminder.java  |                         |Data structure/representation of reminders|
+|Model/Message.java   |                         |Data structure/representation of messages|
+|Model/Author.java    |                         |Data structure/representation of author of messages|
 |ChatFragment.java    |chat                     |The main chat tab     |
 |TipsFragment.java    |tips                     |The main tips tab     |
 |AddReminder.java     |activity_add_reminder2, calendar_picker    |View & controller for adding reminders|
@@ -27,13 +29,13 @@ This list is subject to change, as files may grow/shrink.
 
 ### Currently Working
 - Chatting : For now, app will "mirror" your message
+- Chat history : will consider for other chat content types
 - Calendar & time picker for add reminder
 - Reminders : able to list reminders made & create new reminders
 
 ### Incoming
 - Speech-to-text, and *vice versa*
 - "Dummy" file upload
-- Chat history : currently chats are gone if the back button is pressed/phone is rotated/app is closed
 - All of planned chatting functionalities : diagnosing, disease & drug explainer, hospital location
 - *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
 - Push-notify of reminders

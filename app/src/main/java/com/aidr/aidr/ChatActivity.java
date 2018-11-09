@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.aidr.aidr.Model.Author;
+import com.aidr.aidr.Model.DiseaseMessageViewHolder;
 import com.aidr.aidr.Model.Message;
+import com.aidr.aidr.Model.OutMessageViewHolder;
+import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -27,8 +30,12 @@ import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private Author user = new Author("5005","You",null); // user
-    private Author system = new Author("8899","AIDr",null); // the system
+    public final static String chatHistoryFilename = "chat_history.json";
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+    private final Author user = new Author("5005","You",null); // user
+    private final Author system = new Author("8899","AIDr",null); // the system
+    private final byte CONTENT_TYPE_DISEASE = 1;
+
     private MessagesListAdapter<Message> adapter; // Adapter for viewing messages in chatList
     private boolean speechMode = true; // Mode state
     private MessageInput chatInput;
@@ -36,9 +43,20 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton attachFileBtn;
     private ImageButton switchModeBtn;
     private ImageButton speechInputBtn;
-    public final static String chatHistoryFilename = "chat_history.json";
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+
     private JSONArray messages;
+
+    private MessageHolders.ContentChecker<Message> contentChecker = new MessageHolders.ContentChecker<Message>() {
+
+        @Override
+        public boolean hasContentFor(Message message, byte type) {
+            switch (type) {
+                case CONTENT_TYPE_DISEASE:
+                    return (message.getDetailId() != -1);
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +64,9 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         // Linking message adapter to it's MessageList
-        adapter = new MessagesListAdapter<>(user.getId(),null);
+        MessageHolders holderConfig = new MessageHolders();
+        holderConfig.registerContentType(CONTENT_TYPE_DISEASE, DiseaseMessageViewHolder.class, R.layout.chat_bubble_disease, OutMessageViewHolder.class, R.layout.chat_bubble_outgoing, contentChecker);
+        adapter = new MessagesListAdapter<>(user.getId(), holderConfig,null);
         chatList = ((MessagesList) findViewById(R.id.messagesList));
         chatList.setAdapter(adapter);
 
@@ -110,17 +130,19 @@ public class ChatActivity extends AppCompatActivity {
         String text = "";
         Author author = null;
         Date tstamp = null;
+        int detailId = -1;
         try {
             id = (String) in.get("id");
             text = (String) in.get("text");
             author = convertAuthJSONtoAuthObj((JSONObject) in.get("author"));
             tstamp = sdf.parse((String) in.get("tstamp"));
+            detailId = ((Number) in.get("detailId")).intValue();
         } catch (Exception e) {
             // You probably passed the wrong JSONObject
             author = new Author("0","ERR",null);
             tstamp = new Date();
         }
-        return new Message(text,id,author,tstamp);
+        return new Message(text,id,author,tstamp,detailId);
     }
 
     private Author convertAuthJSONtoAuthObj(JSONObject in) {
@@ -184,12 +206,10 @@ public class ChatActivity extends AppCompatActivity {
                 String inputStr = new String(buffer, Charset.defaultCharset());
                 try {
                     messages = new JSONArray(inputStr);
-                    System.out.println(messages.length());
                     int startPoint = messages.length() - nMessage;
                     if (startPoint < 0) {
                         startPoint = 0;
                     }
-                    System.out.println(startPoint);
                     for (int i = startPoint; i < messages.length();i++) {
                         Message temp = convertMsgJSONtoMsgObj(messages.getJSONObject(i));
                         adapter.addToStart(temp, true);
@@ -223,12 +243,6 @@ public class ChatActivity extends AppCompatActivity {
         finish();
     }
 
-    /* Author data structure - represents the sender of a message */
-
-
-    /* Message data structure - represents a message */
-
-
     /* Process message from user */
     public void processChat(final String query) {
         /* Is-typing "effect" --> this will change if a better method (in UI perspective) is found */
@@ -240,7 +254,13 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 adapter.delete(loading);
-                Message m = new Message("You sent : " + query, "1", system, new Date());
+                int detailId = DiseaseDB.getDiseaseIdByName(query);
+                Message m;
+                if (detailId == -1) {
+                    m = new Message("You sent : " + query, "lel", system, new Date(), detailId);
+                } else {
+                    m = new Message("You asked for " + query + ". Here's what I know about " + query + ".", "dis", system, new Date(), detailId);
+                }
                 adapter.addToStart(m, true);
                 try {
                     messages.put(new JSONObject(m.toString()));
@@ -248,7 +268,6 @@ public class ChatActivity extends AppCompatActivity {
                     // no need, guaranteed to work
                     e.printStackTrace();
                 }
-
 
                 /* Save to file */
                 FileOutputStream ostream = null;
