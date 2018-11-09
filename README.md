@@ -16,7 +16,8 @@ This list is subject to change, as files may grow/shrink.
 |---------------------|-------------------------|----------------------|
 |AIDrChat.java        |activity_aidr_chat       |The main activity     |
 |ReminderFragment.java|reminder                 |The main reminder tab |
-|Reminder.java        |                         |Data structure/representation of reminders|
+|Adapter/ReminderAdapter.java|item_card_reminder|Adapter for viewing reminders|
+|Model/Reminder.java  |                         |Data structure/representation of reminders|
 |ChatFragment.java    |chat                     |The main chat tab     |
 |TipsFragment.java    |tips                     |The main tips tab     |
 |AddReminder.java     |activity_add_reminder2, calendar_picker    |View & controller for adding reminders|

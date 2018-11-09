@@ -1,6 +1,5 @@
 package com.aidr.aidr;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,8 +7,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.IUser;
+import com.aidr.aidr.Model.Author;
+import com.aidr.aidr.Model.Message;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -106,76 +105,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /* Author data structure - represents the sender of a message */
-    private class Author implements IUser {
 
-        private String id;
-        private String name;
-        private String avatar;
-
-        public Author(String id, String name, String ava) {
-            this.id = id;
-            this.name = name;
-            this.avatar = ava;
-        }
-
-        @Override
-        public String getId() {
-            return id;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String getAvatar() {
-            return avatar;
-        }
-    }
 
     /* Message data structure - represents a message */
-    private class Message implements IMessage {
 
-        private String text;
-        private String id;
-        private Author author;
-        private Date tstamp;
-
-        public Message(String text, String id, Author author) {
-            this.text = text;
-            this.id = id;
-            this.author = author;
-        }
-
-        public Message(String text, String id, Author author, Date tstamp) {
-            this.text = text;
-            this.id = id;
-            this.author = author;
-            this.tstamp = tstamp;
-        }
-
-        @Override
-        public String getId() {
-           return id;
-        }
-
-        @Override
-        public String getText() {
-            return text;
-        }
-
-        @Override
-        public Author getUser() {
-            return author;
-        }
-
-        @Override
-        public Date getCreatedAt() {
-            return tstamp;
-        }
-
-    }
 
     /* Process message from user */
     public void respondChat(final String query) {
