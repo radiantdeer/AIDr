@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.aidr.aidr.Adapter.LocationMessageViewHolder;
 import com.aidr.aidr.Model.Author;
 import com.aidr.aidr.Adapter.DiseaseMessageViewHolder;
 import com.aidr.aidr.Model.Message;
@@ -35,6 +36,7 @@ public class ChatActivity extends AppCompatActivity {
     private final Author user = new Author("5005","You",null); // user
     private final Author system = new Author("8899","AIDr",null); // the system
     private final byte CONTENT_TYPE_DISEASE = 1;
+    private final byte CONTENT_TYPE_LOCATIONS = 2;
 
     private MessagesListAdapter<Message> adapter; // Adapter for viewing messages in chatList
     private boolean speechMode = true; // Mode state
@@ -53,6 +55,8 @@ public class ChatActivity extends AppCompatActivity {
             switch (type) {
                 case CONTENT_TYPE_DISEASE:
                     return (message.getDetailId() != -1);
+                case CONTENT_TYPE_LOCATIONS:
+                    return message.isShowingLocations();
             }
             return false;
         }
@@ -67,8 +71,11 @@ public class ChatActivity extends AppCompatActivity {
         // Setting chat bubble default layout
         holderConfig.setIncomingTextLayout(R.layout.chat_bubble_incoming);
         holderConfig.setOutcomingTextLayout(R.layout.chat_bubble_outgoing);
+
         // Setting chat bubble layout for specific chat content type
         holderConfig.registerContentType(CONTENT_TYPE_DISEASE, DiseaseMessageViewHolder.class, R.layout.chat_bubble_disease, OutMessageViewHolder.class, R.layout.chat_bubble_outgoing, contentChecker);
+        holderConfig.registerContentType(CONTENT_TYPE_LOCATIONS,LocationMessageViewHolder.class, R.layout.chat_bubble_location, OutMessageViewHolder.class, R.layout.chat_bubble_outgoing, contentChecker);
+
         // Linking message adapter to it's MessageList
         adapter = new MessagesListAdapter<>(user.getId(), holderConfig,null);
         chatList = ((MessagesList) findViewById(R.id.messagesList));
@@ -135,18 +142,25 @@ public class ChatActivity extends AppCompatActivity {
         Author author = null;
         Date tstamp = null;
         int detailId = -1;
+        boolean showLocation = false;
         try {
             id = (String) in.get("id");
             text = (String) in.get("text");
             author = convertAuthJSONtoAuthObj((JSONObject) in.get("author"));
             tstamp = sdf.parse((String) in.get("tstamp"));
             detailId = ((Number) in.get("detailId")).intValue();
+            showLocation = in.getBoolean("showLocation");
         } catch (Exception e) {
             // You probably passed the wrong JSONObject
             author = new Author("0","ERR",null);
             tstamp = new Date();
         }
-        return new Message(text,id,author,tstamp,detailId);
+        if (showLocation) {
+            return new Message(text,id,author,tstamp,showLocation);
+        } else {
+            return new Message(text,id,author,tstamp,detailId);
+        }
+
     }
 
     private Author convertAuthJSONtoAuthObj(JSONObject in) {
@@ -258,13 +272,18 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 adapter.delete(loading);
-                int detailId = DiseaseDB.getDiseaseIdByName(query);
                 Message m;
-                if (detailId == -1) {
-                    m = new Message("You sent : " + query, "lel", system, new Date(), detailId);
+                if (query.contains("Show") && query.contains("nearest") && (query.contains("hospitals") || query.contains("hospital"))) {
+                    m = new Message("Here is the nearest hospitals","loc",system,new Date(),true);
                 } else {
-                    m = new Message("You asked for " + query + ". Here's what I know about " + query + ".", "dis", system, new Date(), detailId);
+                    int detailId = DiseaseDB.getDiseaseIdByName(query);
+                    if (detailId == -1) {
+                        m = new Message("You sent : " + query, "lel", system, new Date());
+                    } else {
+                        m = new Message("You asked for " + query + ". Here's what I know about " + query + ".", "dis", system, new Date(), detailId);
+                    }
                 }
+
                 adapter.addToStart(m, true);
                 try {
                     messages.put(new JSONObject(m.toString()));

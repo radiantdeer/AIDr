@@ -14,12 +14,15 @@ This list is subject to change, as files may grow/shrink.
 
 |Name                 |Related XML (layout) file|Description           |
 |---------------------|-------------------------|----------------------|
-|Adapter/ReminderAdapter.java|item_card_reminder|Adapter for viewing reminders|
 |Adapter/DiseaseMessageViewHolder.java|         |Adapter/controller for chat viewing a disease|
+|Adapter/LocationAdapter.java|                  |Adapter/controller for RecyclerView in chat_bubble_locations|
+|Adapter/LocationMessageViewHolder.java|        |Adapter/controller for chat viewing locations of hospital|
 |Adapter/OutMessageViewHolder.java|             |Adapter/controller for outgoing chat (although it's "unused")|
-|Model/Reminder.java  |                         |Data structure/representation of reminders|
-|Model/Message.java   |                         |Data structure/representation of messages|
+|Adapter/ReminderAdapter.java|item_card_reminder|Adapter for viewing reminders|
 |Model/Author.java    |                         |Data structure/representation of author of messages|
+|Model/Hospital.java  |                         |Data structure/representation of hospitals|
+|Model/Message.java   |                         |Data structure/representation of messages|
+|Model/Reminder.java  |                         |Data structure/representation of reminders|
 |AddReminder.java     |activity_add_reminder2, calendar_picker|View & controller for adding reminders|
 |AIDrChat.java        |activity_aidr_chat       |The main activity     |
 |ChatActivity.java    |activity_chat, chat_bubble_*|View & controller for the chatting feature| 
@@ -29,12 +32,13 @@ This list is subject to change, as files may grow/shrink.
 |ReminderFragment.java|reminder                 |The main reminder tab |
 |TipsFragment.java    |tips                     |The main tips tab     |
 
-
-
 ## What Works & What Doesn't Work
 
 ### Currently Working
-- Chatting : system can show disease if user types in the disease. Other than that, the system just mirrors the message.
+- Chatting : 
+    - System can show disease if user types in the disease. 
+    - System can also show (dummy) nearest hospital. 
+    - Other than that, the system just mirrors the message.
 - Disease Explainer
 - Chat history
 - Reminders : able to list reminders made & create new reminders
@@ -42,9 +46,9 @@ This list is subject to change, as files may grow/shrink.
 ### Incoming
 - Speech-to-text, and *vice versa*
 - "Dummy" file upload
-- All of planned chatting functionalities : diagnosing, drug explainer, hospital location
+- Several planned chatting functionalities : diagnosing, drug explainer
 - *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
-- Push-notify of reminders
+- Push-notification of reminders
 - Settings (?)
 
 ## Libraries Used

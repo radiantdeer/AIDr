@@ -13,6 +13,9 @@ public class Message implements IMessage, MessageContentType {
     private Author author;
     private Date tstamp;
     private int detailId;
+    private boolean showLocations;
+    private double lat = 0;
+    private double lon = 0;
     final static private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
 
     public Message(String text, String id, Author author) {
@@ -21,6 +24,7 @@ public class Message implements IMessage, MessageContentType {
         this.author = author;
         this.tstamp = new Date();
         this.detailId = -1;
+        this.showLocations = false;
     }
 
     public Message(String text, String id, Author author, Date tstamp) {
@@ -29,6 +33,7 @@ public class Message implements IMessage, MessageContentType {
         this.author = author;
         this.tstamp = tstamp;
         this.detailId = -1;
+        this.showLocations = false;
     }
 
     public Message(String text, String id, Author author, Date tstamp, int detailId) {
@@ -37,6 +42,16 @@ public class Message implements IMessage, MessageContentType {
         this.author = author;
         this.tstamp = tstamp;
         this.detailId = detailId;
+        this.showLocations = false;
+    }
+
+    public Message(String text, String id, Author author, Date tstamp, boolean showLocations) {
+        this.text = text;
+        this.id = id;
+        this.author = author;
+        this.tstamp = tstamp;
+        this.detailId = -1;
+        this.showLocations = showLocations;
     }
 
     @Override
@@ -63,18 +78,29 @@ public class Message implements IMessage, MessageContentType {
         return detailId;
     }
 
+    public boolean isShowingLocations() { return showLocations; }
+
     public void setDetailId(int detailId) {
         this.detailId = detailId;
     }
 
+    public void setShowLocations(boolean showLocations) { this.showLocations = showLocations; }
+
     @Override
     public String toString() {
-        return "{" +
+        StringBuffer out = new StringBuffer("{" +
                 "\"id\" : \"" + id + "\"," +
                 "\"text\" : \"" + text + "\"," +
                 "\"author\" : " + author + "," +
                 "\"tstamp\" : \"" + sdf.format(tstamp) + "\"," +
-                "\"detailId\" : " + detailId +
-                "}";
+                "\"detailId\" : " + detailId + "," +
+                "\"showLocation\" : " + showLocations);
+        if (showLocations) {
+            out.append("," +
+            "\"lat\" : " + lat + "," +
+            "\"lon\" : " + lon);
+        }
+        out.append("}");
+        return out.toString();
     }
 }
