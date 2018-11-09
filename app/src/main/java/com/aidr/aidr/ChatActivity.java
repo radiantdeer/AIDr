@@ -63,9 +63,13 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // Linking message adapter to it's MessageList
         MessageHolders holderConfig = new MessageHolders();
+        // Setting chat bubble default layout
+        holderConfig.setIncomingTextLayout(R.layout.chat_bubble_incoming);
+        holderConfig.setOutcomingTextLayout(R.layout.chat_bubble_outgoing);
+        // Setting chat bubble layout for specific chat content type
         holderConfig.registerContentType(CONTENT_TYPE_DISEASE, DiseaseMessageViewHolder.class, R.layout.chat_bubble_disease, OutMessageViewHolder.class, R.layout.chat_bubble_outgoing, contentChecker);
+        // Linking message adapter to it's MessageList
         adapter = new MessagesListAdapter<>(user.getId(), holderConfig,null);
         chatList = ((MessagesList) findViewById(R.id.messagesList));
         chatList.setAdapter(adapter);
