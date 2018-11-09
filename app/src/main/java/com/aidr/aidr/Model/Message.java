@@ -2,6 +2,7 @@ package com.aidr.aidr.Model;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message implements IMessage {
@@ -10,6 +11,7 @@ public class Message implements IMessage {
     private String id;
     private Author author;
     private Date tstamp;
+    final static private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
 
     public Message(String text, String id, Author author) {
         this.text = text;
@@ -45,4 +47,13 @@ public class Message implements IMessage {
         return tstamp;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\" : \"" + id + "\"," +
+                "\"text\" : \"" + text + "\"," +
+                "\"author\" : " + author + "," +
+                "\"tstamp\" : \"" + sdf.format(tstamp) + "\"" +
+                "}";
+    }
 }

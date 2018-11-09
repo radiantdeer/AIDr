@@ -28,4 +28,13 @@ public class Author implements IUser {
     public String getAvatar() {
         return avatar;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\" : \"" + id + "\"," +
+                "\"name\" : \"" + name + "\"," +
+                "\"avatar\" : \"" + avatar + "\"" +
+                "}";
+    }
 }
