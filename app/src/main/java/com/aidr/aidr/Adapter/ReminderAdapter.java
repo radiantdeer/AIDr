@@ -1,7 +1,10 @@
 package com.aidr.aidr.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aidr.aidr.Model.Reminder;
 import com.aidr.aidr.R;
+import com.aidr.aidr.ReminderFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder> {
@@ -59,6 +63,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
         private TextView mTitleTextView;
         private TextView mDosageTextView;
         private ImageView mMedicineImageView;
+        private CardView mReminderCardView;
 
         Holder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +72,63 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
             mTitleTextView = itemView.findViewById(R.id.tv_title);
             mDosageTextView = itemView.findViewById(R.id.tv_dosage);
             mMedicineImageView = itemView.findViewById(R.id.iv_medicine_icon);
+            mReminderCardView = itemView.findViewById(R.id.cv_reminder);
+
+            mReminderCardView.setOnLongClickListener(reminderCardOnLongClick());
+        }
+
+        private View.OnLongClickListener reminderCardOnLongClick() {
+            return new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(final View view) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.delete_reminder_title)
+                            .setMessage(R.string.delete_reminder_message)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ArrayList<JSONObject> list = new ArrayList<>();
+
+                                    for (int j = 0; j < reminders.length(); j++) {
+                                        try {
+                                            list.add((JSONObject) reminders.get(j));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    list.remove(getAdapterPosition());
+                                    ReminderFragment.currReminders = new JSONArray(list);
+                                    reminders = new JSONArray(list);
+
+                                    FileOutputStream ostream = null;
+                                    try {
+                                        ostream = context.openFileOutput(ReminderFragment.filename, Context.MODE_PRIVATE);
+                                    } catch (Exception e) {
+                                        // should not happen, file is guaranteed to be available
+                                        e.printStackTrace();
+                                    }
+
+                                    if (ostream != null) {
+                                        try {
+                                            ostream.write(ReminderFragment.currReminders.toString().getBytes());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).create().show();
+                    return false;
+                }
+            };
         }
     }
 }

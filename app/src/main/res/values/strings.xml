@@ -5,4 +5,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_add_reminder">AddReminder</string>
     <string name="title_activity_disease_explainer">DiseaseExplainer</string>
+    <string name="delete_reminder_title">Confirm Delete</string>
+    <string name="delete_reminder_message">Are you sure to delete reminder?</string>
+    <string name="no_reminder">You have no reminder</string>
 </resources>

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 
@@ -25,6 +26,7 @@ import com.aidr.aidr.Adapter.ReminderAdapter;
 public class ReminderFragment extends Fragment {
     private RecyclerView recyclerView;
     private ReminderAdapter reminderAdapter;
+    private TextView mNoReminderCaptionTextView;
 
     private File file;
     final static public String filename = "reminders.json";
@@ -34,6 +36,7 @@ public class ReminderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reminder, container, false);
         checkIfRemindersExists();
+
         return rootView;
     }
 
@@ -41,9 +44,10 @@ public class ReminderFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mNoReminderCaptionTextView = view.findViewById(R.id.tv_no_reminder);
+
         //retrieve from database
         refreshReminders();
-
     }
 
     @Override
@@ -116,6 +120,11 @@ public class ReminderFragment extends Fragment {
             getRemindersFromFile();
         }
 
+        if (currReminders.length() > 0){
+            mNoReminderCaptionTextView.setVisibility(View.INVISIBLE);
+        } else {
+            mNoReminderCaptionTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
