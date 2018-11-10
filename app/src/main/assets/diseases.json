@@ -12,5 +12,12 @@
     "description" : "typhus.html",
     "image" : "typhus.jpeg",
     "drugs" : [1]
+  },
+  {
+    "id" : 3,
+    "name" : "Common sore throat",
+    "description" : "common_sore_throat.html",
+    "image" : "",
+    "drugs" : []
   }
 ]

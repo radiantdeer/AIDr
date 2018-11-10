@@ -75,7 +75,8 @@ public class ChatActivity extends AppCompatActivity {
     private JSONArray messages;
 
     private int currDisease = -1;
-
+    private boolean isDiagnoseOnProgress = false;
+    private int suspectedDisease = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -420,10 +421,36 @@ public class ChatActivity extends AppCompatActivity {
 
                 String forChecksOnly = query.toLowerCase();
 
+                // If diagnosing is still undergoing...
+                if (isDiagnoseOnProgress) {
+                    if ((suspectedDisease == DiseaseDB.getDiseaseIdByNameIgnoreCase("cold")) && forChecksOnly.contains("yes")) {
+                        m = new Message("Aright, based on your condition you've told me, you might have cold. Here's what I have about cold.","dgs",system,new Date(),suspectedDisease,true);
+                        System.out.println(suspectedDisease);
+                        isDiagnoseOnProgress = false;
+                        currDisease = suspectedDisease;
+                    } else if ((suspectedDisease == DiseaseDB.getDiseaseIdByNameIgnoreCase("cold")) && forChecksOnly.contains("no")){
+                        suspectedDisease = DiseaseDB.getDiseaseIdByName("Common sore throat");
+                        m = new Message("Aright, based on your condition you've told me, you might have common sore throat. Here's what I have about common sore throat.","dgs",system,new Date(),suspectedDisease, true);
+                        isDiagnoseOnProgress = false;
+                        currDisease = suspectedDisease;
+                    } else  {
+                        m = new Message("I didn't understand that","dgs",system,new Date());
+                    }
+                    addMessage(m);
+
+
+                // One possibility of diagnosing
+                } else if (forChecksOnly.contains("have") && forChecksOnly.contains("sore throat")) {
+                    suspectedDisease = DiseaseDB.getDiseaseIdByNameIgnoreCase("cold");
+                    m = new Message("Okay, do you experience fever/cold during the last week?","dgs",system,new Date());
+                    addMessage(m);
+                    isDiagnoseOnProgress = true;
+
                 // Show hospital locations
-                if (forChecksOnly.contains("show") && forChecksOnly.contains("nearest") && (forChecksOnly.contains("hospital"))) {
+                } else if ((forChecksOnly.contains("show") || forChecksOnly.contains("where")) && forChecksOnly.contains("nearest") && (forChecksOnly.contains("hospital"))) {
                     m = new Message("Here is the nearest hospitals","loc",system,new Date(),true);
                     addMessage(m);
+
                 // Show drugs available to a disease
                 } else if (forChecksOnly.contains("what") && (forChecksOnly.contains("drug") || forChecksOnly.contains("medicine")) && (forChecksOnly.contains("take")) && currDisease != -1) {
                     String disName = DiseaseDB.getDiseaseNameById(currDisease);
@@ -444,23 +471,31 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+                // gimmick - reply back with "You're welcome!" when user says "Thanks!", or "Thank you!"
                 } else if (forChecksOnly.contains("thanks") || (forChecksOnly.contains("thank") && forChecksOnly.contains("you"))) {
                     m = new Message("You're welcome!","thx",system,new Date());
                     addMessage(m);
+                    currDisease = -1;
+
                 // Search for a disease, or just mirror the user if no disease found
-                } else {
-                    int detailId = DiseaseDB.getDiseaseIdByNameIgnoreCase(query);
+                } else if (forChecksOnly.contains("tell") && forChecksOnly.contains("about")) {
+                    String diseaseKeyWord = forChecksOnly.substring(forChecksOnly.lastIndexOf("about ") + 6);
+                    int detailId = DiseaseDB.getDiseaseIdByNameIgnoreCase(diseaseKeyWord);
                     if (detailId == -1) {
-                        m = new Message("You sent : " + query, "lel", system, new Date());
+                        m = new Message("Sorry, I don't know about " + diseaseKeyWord + ".", "lel", system, new Date());
                         currDisease = -1;
                     } else {
-                        m = new Message("Here's what I know about " + query + ".", "dis", system, new Date(), detailId, true);
+                        m = new Message("Here's what I know about " + diseaseKeyWord + ".", "dis", system, new Date(), detailId, true);
                         currDisease = detailId;
                     }
                     addMessage(m);
+
+                // Else, just mirrors user's message
+                } else {
+                    m = new Message("You sent : " + query, "lel", system, new Date());
+                    addMessage(m);
                 }
-
-
             }
         }, 1500);
     }

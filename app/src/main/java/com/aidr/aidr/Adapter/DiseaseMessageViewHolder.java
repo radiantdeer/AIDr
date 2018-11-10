@@ -71,7 +71,7 @@ public class DiseaseMessageViewHolder extends MessagesListAdapter.IncomingMessag
             msgText.setText(shortdesc);
         }
 
-        if (relatedImage != null || !relatedImage.equals("")) {
+        if ((relatedImage != null) && (!relatedImage.equals(""))) {
             String fulldir = imageDir + relatedImage;
             try {
                 InputStream img = bubbleView.getContext().getAssets().open(fulldir);
