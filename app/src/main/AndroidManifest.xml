@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aidr.aidr">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +23,7 @@
         <activity android:name=".AddReminder" />
         <activity android:name=".ChatActivity" />
         <activity
-            android:name=".DiseaseExplainer"
+            android:name=".Explainer"
             android:label="@string/title_activity_disease_explainer"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

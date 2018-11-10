@@ -36,7 +36,9 @@ This list is subject to change, as files may grow/shrink.
 
 ### Currently Working
 - Chatting : 
-    - System can show disease if user types in the disease. 
+    - All hail the glorious speech-to-text!
+    - System can show disease if user types in the disease.
+    - System can show drugs for a specific disease. 
     - System can also show (dummy) nearest hospital. 
     - Other than that, the system just mirrors the message.
 - Disease Explainer
@@ -44,9 +46,9 @@ This list is subject to change, as files may grow/shrink.
 - Reminders : able to list reminders made & create new reminders
 
 ### Incoming
-- Speech-to-text, and *vice versa*
+- Text-to-speech
 - "Dummy" file upload
-- Several planned chatting functionalities : diagnosing, drug explainer
+- Several planned chatting functionalities : diagnosing
 - *Feedbacks* for saving reminders ("Reminders added successfully!", or something like that)
 - Push-notification of reminders
 - Settings (?)

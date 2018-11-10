@@ -1,0 +1,18 @@
+[
+  {
+    "id" : 1,
+    "name" : "Azithromycin",
+    "short-description" : "Azithromycin is an antibiotic effective against bacteria of intestinal infections.",
+    "description" : "azithromycin.html",
+    "image" : "",
+    "dosage" : ["Varies, consult your doctor"]
+  },
+  {
+    "id" : 2,
+    "name" : "Metaprolol",
+    "short-description" : "Metaprolol is a general-use drug for curing fever, cold, runny nose, and influenza.",
+    "description" : "metaprolol.html",
+    "image" : "",
+    "dosage" : ["3 times per 24 hours"]
+  }
+]

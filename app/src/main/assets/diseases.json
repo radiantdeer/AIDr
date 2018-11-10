@@ -3,12 +3,14 @@
     "id" : 1,
     "name" : "Cold",
     "description" : "cold.html",
-    "image" : "cold.jpeg"
+    "image" : "cold.jpeg",
+    "drugs" : [2]
   },
   {
     "id" : 2,
     "name" : "Typhus",
     "description" : "typhus.html",
-    "image" : "typhus.jpeg"
+    "image" : "typhus.jpeg",
+    "drugs" : [1]
   }
 ]

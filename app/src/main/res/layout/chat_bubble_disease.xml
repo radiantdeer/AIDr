@@ -27,13 +27,22 @@
             android:layout_marginRight="4dp"
             android:layout_marginStart="8dp"/>
 
-        <ImageView
-            android:id="@+id/diseaseImage"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:visibility="visible"
-            app:srcCompat="@color/transparent" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/diseaseImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@color/transparent"
+                tools:srcCompat="@tools:sample/avatars[0]" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/diseaseTitle"

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-public class DiseaseExplainer extends AppCompatActivity {
+public class Explainer extends AppCompatActivity {
 
     private static String descriptionDir = "descriptions/";
 
@@ -22,15 +22,24 @@ public class DiseaseExplainer extends AppCompatActivity {
         content.setWebChromeClient(new WebChromeClient());
         TextView textTitle = (TextView) findViewById(R.id.titleText);
 
-        int diseaseId = getIntent().getIntExtra("diseaseId",-1);
+        String type = getIntent().getStringExtra("type");
+        int id;
+        JSONObject payload;
+        if (type.equals("disease")) {
+            id = getIntent().getIntExtra("diseaseId",-1);
+            payload = DiseaseDB.getDiseaseById(id);
+        } else {
+            id = getIntent().getIntExtra("drugId",-1);
+            payload = DiseaseDB.getDrugById(id);
+        }
+
 
         String title = "Sample Title";
         String text = "";
-        if (diseaseId != -1) {
-            JSONObject disease = DiseaseDB.getDiseaseById(diseaseId);
+        if (id != -1) {
             try {
-                title = (String) disease.get("name");
-                text = (String) disease.get("description");
+                title = (String) payload.get("name");
+                text = (String) payload.get("description");
             } catch (Exception e) {
                 e.printStackTrace();
             }

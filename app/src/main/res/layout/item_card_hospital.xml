@@ -52,10 +52,9 @@
                 android:id="@+id/ratingText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/hospitalNameText"
                 app:layout_constraintTop_toBottomOf="@+id/hospitalNameText"
                 app:layout_constraintVertical_bias="0.222"
                 tools:text="3.0" />
@@ -88,10 +87,9 @@
                 android:id="@+id/distanceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/hospitalAddressText"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/hospitalNameText"
                 app:layout_constraintTop_toBottomOf="@+id/ratingBar"
                 tools:text="5 km" />
 
@@ -100,10 +98,9 @@
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/hospitalNameText"
                 tools:text="Jl. Ir. H. Juanda" />
 
             <ImageButton

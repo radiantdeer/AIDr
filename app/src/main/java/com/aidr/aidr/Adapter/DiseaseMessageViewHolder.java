@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aidr.aidr.DiseaseDB;
-import com.aidr.aidr.DiseaseExplainer;
+import com.aidr.aidr.Explainer;
 import com.aidr.aidr.Model.Message;
+import com.aidr.aidr.R;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import org.json.JSONObject;
@@ -20,64 +21,80 @@ import java.io.InputStream;
 
 public class DiseaseMessageViewHolder extends MessagesListAdapter.IncomingMessageViewHolder<Message> {
 
-    private TextView title;
-    private ImageView image;
-    private Button detail;
     private ViewGroup bubbleView;
     public static String imageDir = "images/";
 
     public DiseaseMessageViewHolder(View itemView) {
         super(itemView);
         bubbleView = (ViewGroup) itemView;
-        ViewGroup mainLayout = (ViewGroup) bubbleView.getChildAt(0);
-        image = (ImageView) mainLayout.getChildAt(1);
-        title = (TextView) mainLayout.getChildAt(2);
-        detail = (Button) mainLayout.getChildAt(3);
     }
 
     @Override
-    public void onBind(Message message) {
+    public void onBind(final Message message) {
         super.onBind(message);
 
+        TextView msgText = (TextView) bubbleView.findViewById(R.id.messageText);
+        ImageView image = (ImageView) bubbleView.findViewById(R.id.diseaseImage);
+        TextView title = (TextView) bubbleView.findViewById(R.id.diseaseTitle);
+        Button detailBtn = (Button) bubbleView.findViewById(R.id.detailButton);
+
         /* Retrieve disease details */
-        JSONObject diseaseDetail = null;
+        JSONObject detail = null;
         final int disId = message.getDetailId();
 
         if (disId != -1) {
-            diseaseDetail = DiseaseDB.getDiseaseById(disId);
+            if (message.isDisease()) {
+                detail = DiseaseDB.getDiseaseById(disId);
+            } else {
+                detail = DiseaseDB.getDrugById(disId);
+            }
         }
 
         String titleDisease = "Sample Disease";
         String relatedImage = null;
+        String shortdesc = "";
 
-        if (diseaseDetail != null) {
+        if (detail != null) {
             try {
-                titleDisease = (String) diseaseDetail.get("name");
-                relatedImage = (String) diseaseDetail.get("image");
+                titleDisease = (String) detail.get("name");
+                relatedImage = (String) detail.get("image");
+                if (!message.isDisease()) {
+                    shortdesc = detail.getString("short-description");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         title.setText(titleDisease);
+        if (!shortdesc.equals("")) {
+            msgText.setText(shortdesc);
+        }
 
-        if (relatedImage != null) {
+        if (relatedImage != null || !relatedImage.equals("")) {
             String fulldir = imageDir + relatedImage;
             try {
                 InputStream img = bubbleView.getContext().getAssets().open(fulldir);
                 Bitmap bitmap = BitmapFactory.decodeStream(img);
                 image.setImageBitmap(bitmap);
-                bubbleView.invalidate();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        detail.setOnClickListener(new View.OnClickListener() {
+        bubbleView.invalidate();
+
+        detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),DiseaseExplainer.class);
-                intent.putExtra("diseaseId",disId);
+                Intent intent = new Intent(v.getContext(),Explainer.class);
+                if (message.isDisease()) {
+                    intent.putExtra("diseaseId",disId);
+                    intent.putExtra("type","disease");
+                } else {
+                    intent.putExtra("drugId",disId);
+                    intent.putExtra("type","medicine");
+                }
                 v.getContext().startActivity(intent);
             }
         });

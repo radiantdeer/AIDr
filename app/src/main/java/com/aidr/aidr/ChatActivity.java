@@ -1,10 +1,18 @@
 package com.aidr.aidr;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.speech.RecognitionListener;
+import android.speech.SpeechRecognizer;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -27,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
@@ -38,6 +47,8 @@ public class ChatActivity extends AppCompatActivity {
     private final byte CONTENT_TYPE_DISEASE = 1;
     private final byte CONTENT_TYPE_LOCATIONS = 2;
 
+    private final int REQUEST_MICROPHONE = 11;
+
     private MessagesListAdapter<Message> adapter; // Adapter for viewing messages in chatList
     private boolean speechMode = true; // Mode state
     private MessageInput chatInput;
@@ -45,8 +56,6 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton attachFileBtn;
     private ImageButton switchModeBtn;
     private ImageButton speechInputBtn;
-
-    private JSONArray messages;
 
     private MessageHolders.ContentChecker<Message> contentChecker = new MessageHolders.ContentChecker<Message>() {
 
@@ -61,6 +70,12 @@ public class ChatActivity extends AppCompatActivity {
             return false;
         }
     };
+
+
+    private JSONArray messages;
+
+    private int currDisease = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +106,7 @@ public class ChatActivity extends AppCompatActivity {
         chatInput.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(final CharSequence input) {
-                Message msg = new Message(input.toString(),"lel",user, new Date());
-                adapter.addToStart(msg, true);
-                try {
-                    messages.put(new JSONObject(msg.toString()));
-                } catch (Exception e) {
-                    // no need, guaranteed to work
-                    e.printStackTrace();
-                }
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        processChat(input.toString());
-                    }
-                }, 2000);
+                sendMessage(input.toString());
                 return true;
             }
         });
@@ -117,6 +118,90 @@ public class ChatActivity extends AppCompatActivity {
                 if ((ke.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     chatInput.getButton().callOnClick();
                     return true;
+                }
+                return false;
+            }
+        });
+
+        final Message listenPlaceholder = new Message("Listening...","spch",user,new Date());
+        final Message processingPlaceholder = new Message("Processing...","spch",user,new Date());
+
+        final SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
+
+        sr.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int error) {
+
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> arrResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                float[] confidencePoints = results.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES);
+
+                /* Finding best match */
+                float maxVal = confidencePoints[0];
+                int maxPos = 0;
+                for (int i = 1; i < confidencePoints.length; i++) {
+                    if (maxVal < confidencePoints[i]) {
+                        maxVal = confidencePoints[i];
+                        maxPos = i;
+                    }
+                }
+                String bestMatch = arrResults.get(maxPos);
+                if (!bestMatch.equals("")) {
+                    sendMessage(bestMatch);
+                }
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+
+            }
+        });
+
+        speechInputBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        sr.startListening(new Intent());
+                        adapter.addToStart(listenPlaceholder,true);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        sr.stopListening();
+                        adapter.delete(listenPlaceholder);
+                        return true;
                 }
                 return false;
             }
@@ -142,6 +227,7 @@ public class ChatActivity extends AppCompatActivity {
         Author author = null;
         Date tstamp = null;
         int detailId = -1;
+        boolean isDisease = false;
         boolean showLocation = false;
         try {
             id = (String) in.get("id");
@@ -149,6 +235,7 @@ public class ChatActivity extends AppCompatActivity {
             author = convertAuthJSONtoAuthObj((JSONObject) in.get("author"));
             tstamp = sdf.parse((String) in.get("tstamp"));
             detailId = ((Number) in.get("detailId")).intValue();
+            isDisease = in.getBoolean("isDisease");
             showLocation = in.getBoolean("showLocation");
         } catch (Exception e) {
             // You probably passed the wrong JSONObject
@@ -158,7 +245,7 @@ public class ChatActivity extends AppCompatActivity {
         if (showLocation) {
             return new Message(text,id,author,tstamp,showLocation);
         } else {
-            return new Message(text,id,author,tstamp,detailId);
+            return new Message(text,id,author,tstamp,detailId,isDisease);
         }
 
     }
@@ -239,14 +326,23 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /* Switch input mode */
     public void switchMode(View view) {
         speechMode = !speechMode;
+        System.out.println(speechMode);
         if (speechMode) {
-            chatInput.setVisibility(View.INVISIBLE);
-            attachFileBtn.setVisibility(View.INVISIBLE);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},REQUEST_MICROPHONE);
+                System.out.println("Requesting microphone access...");
+                speechMode = !speechMode;
+                System.out.println(speechMode);
+            } else {
+                chatInput.setVisibility(View.INVISIBLE);
+                attachFileBtn.setVisibility(View.INVISIBLE);
 
-            speechInputBtn.setVisibility(View.VISIBLE);
-            switchModeBtn.setImageResource(R.drawable.ic_keyboard_black_24dp);
+                speechInputBtn.setVisibility(View.VISIBLE);
+                switchModeBtn.setImageResource(R.drawable.ic_keyboard_black_24dp);
+            }
         } else {
             speechInputBtn.setVisibility(View.INVISIBLE);
             switchModeBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
@@ -261,6 +357,54 @@ public class ChatActivity extends AppCompatActivity {
         finish();
     }
 
+    /* Simulate sending message */
+    public void sendMessage(final String query) {
+        Message msg = new Message(query,"lel",user, new Date());
+        addMessage(msg, false);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                processChat(query);
+            }
+        }, 2000);
+    }
+
+    /* Adds message to MessageList & dumps chat history */
+    public void addMessage(Message m) {
+        addMessage(m,true);
+    }
+
+    /* Adds message to MessageList. Set dumpChat to true to execute dumping chat history */
+    public void addMessage(Message m, boolean dumpChat) {
+        adapter.addToStart(m, true);
+        try {
+            messages.put(new JSONObject(m.toString()));
+        } catch (Exception e) {
+            // no need, guaranteed to work
+            e.printStackTrace();
+        }
+
+        /* Save to file */
+        if (dumpChat) {
+            FileOutputStream ostream = null;
+            try {
+                ostream = openFileOutput(chatHistoryFilename, Context.MODE_PRIVATE);
+            } catch (Exception e) {
+                // should not happen, file is guaranteed to be available
+                e.printStackTrace();
+            }
+
+            if (ostream != null) {
+                try {
+                    ostream.write(messages.toString().getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /* Process message from user */
     public void processChat(final String query) {
         /* Is-typing "effect" --> this will change if a better method (in UI perspective) is found */
@@ -273,41 +417,50 @@ public class ChatActivity extends AppCompatActivity {
             public void run() {
                 adapter.delete(loading);
                 Message m;
-                if (query.contains("Show") && query.contains("nearest") && (query.contains("hospitals") || query.contains("hospital"))) {
+
+                String forChecksOnly = query.toLowerCase();
+
+                // Show hospital locations
+                if (forChecksOnly.contains("show") && forChecksOnly.contains("nearest") && (forChecksOnly.contains("hospital"))) {
                     m = new Message("Here is the nearest hospitals","loc",system,new Date(),true);
+                    addMessage(m);
+                // Show drugs available to a disease
+                } else if (forChecksOnly.contains("what") && (forChecksOnly.contains("drug") || forChecksOnly.contains("medicine")) && (forChecksOnly.contains("take")) && currDisease != -1) {
+                    String disName = DiseaseDB.getDiseaseNameById(currDisease);
+                    JSONArray temp = DiseaseDB.getDrugsByDiseaseId(currDisease);
+                    if (temp.length() <= 0) {
+                        m = new Message("I'm sorry, I currently do not know any drugs for that disease...", "drg", system, new Date());
+                        addMessage(m);
+                    } else {
+                        m = new Message("Here are some drugs for alleviating " + disName + ". Any of these below should be suitable!", "drg", system, new Date());
+                        addMessage(m);
+                        for (int i = 0; i < temp.length(); i++) {
+                            try {
+                                int drugId = temp.getJSONObject(i).getInt("id");
+                                m = new Message("", "drgMr", system, new Date(), drugId, false);
+                                addMessage(m);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } else if (forChecksOnly.contains("thanks") || (forChecksOnly.contains("thank") && forChecksOnly.contains("you"))) {
+                    m = new Message("You're welcome!","thx",system,new Date());
+                    addMessage(m);
+                // Search for a disease, or just mirror the user if no disease found
                 } else {
-                    int detailId = DiseaseDB.getDiseaseIdByName(query);
+                    int detailId = DiseaseDB.getDiseaseIdByNameIgnoreCase(query);
                     if (detailId == -1) {
                         m = new Message("You sent : " + query, "lel", system, new Date());
+                        currDisease = -1;
                     } else {
-                        m = new Message("You asked for " + query + ". Here's what I know about " + query + ".", "dis", system, new Date(), detailId);
+                        m = new Message("Here's what I know about " + query + ".", "dis", system, new Date(), detailId, true);
+                        currDisease = detailId;
                     }
+                    addMessage(m);
                 }
 
-                adapter.addToStart(m, true);
-                try {
-                    messages.put(new JSONObject(m.toString()));
-                } catch (Exception e) {
-                    // no need, guaranteed to work
-                    e.printStackTrace();
-                }
 
-                /* Save to file */
-                FileOutputStream ostream = null;
-                try {
-                    ostream = openFileOutput(chatHistoryFilename, Context.MODE_PRIVATE);
-                } catch (Exception e) {
-                    // should not happen, file is guaranteed to be available
-                    e.printStackTrace();
-                }
-
-                if (ostream != null) {
-                    try {
-                        ostream.write(messages.toString().getBytes());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }, 1500);
     }
