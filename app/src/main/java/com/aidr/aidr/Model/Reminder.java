@@ -1,5 +1,11 @@
 package com.aidr.aidr.Model;
 
+import com.aidr.aidr.ReminderDB;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,9 +13,8 @@ import java.util.Date;
 public class Reminder {
     private String title;
     private String dosage;
-    private String time;
     private String additionalNotes;
-    final static private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+    final static public SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
     private Date date;
 
     public Reminder() {
@@ -35,6 +40,13 @@ public class Reminder {
         this.additionalNotes = additionalNotes;
     }
 
+    public Reminder(JSONObject in) throws JSONException, ParseException {
+        this.title = in.getString("title");
+        this.dosage = in.getString("dosage");
+        this.date = Reminder.sdf.parse(in.getString("dueDate"));
+        this.additionalNotes = in.getString("additional");
+    }
+
     public String getTitle() {
         return title;
     }
@@ -49,14 +61,6 @@ public class Reminder {
 
     public void setDosage(String dosage) {
         this.dosage = dosage;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public Date getDate() {

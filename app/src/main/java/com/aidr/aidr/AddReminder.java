@@ -1,8 +1,13 @@
 package com.aidr.aidr;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +55,13 @@ public class AddReminder extends AppCompatActivity {
         additionalNotes = (EditText) findViewById(R.id.additionalText);
 
         selectedDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(selectedDate);
+        tempYear = c.get(Calendar.YEAR);
+        tempMonth = c.get(Calendar.MONTH);
+        tempDay = c.get(Calendar.DAY_OF_MONTH);
+        tempHour = c.get(Calendar.HOUR);
+        tempMinute = c.get(Calendar.MINUTE);
 
         chosenDateText = ((TextView) findViewById(R.id.chosenDateView));
         String currentDateOut = sdfDate.format(selectedDate);
@@ -63,30 +75,10 @@ public class AddReminder extends AppCompatActivity {
     /* Save reminder */
     public void saveReminder(View view) {
         Reminder test = new Reminder(chosenTitle.getText().toString(),chosenDosage.getText().toString(),selectedDate,additionalNotes.getText().toString());
-
-        FileOutputStream ostream = null;
-        try {
-            ostream = openFileOutput(ReminderFragment.filename, Context.MODE_PRIVATE);
-        } catch (Exception e) {
-            // should not happen, file is guaranteed to be available
-            e.printStackTrace();
-        }
-
-        if (ostream != null) {
-            JSONArray allReminders = ReminderFragment.currReminders;
-            try {
-                allReminders.put(new JSONObject(test.toString()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                ostream.write(allReminders.toString().getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        ReminderDB.addReminder(test,true);
         switchToMain(view);
     }
+
 
     // Close this activity -> return to main activity, which is AiDrChat
     public void switchToMain(View view) {
@@ -104,6 +96,8 @@ public class AddReminder extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         c.set(tempYear,tempMonth,tempDay,tempHour,tempMinute);
         selectedDate = c.getTime();
+        String dateOut = sdfDate.format(selectedDate);
+        chosenDateText.setText(dateOut);
         String timeOut = sdfTime.format(selectedDate);
         chosenTimeText.setText(timeOut);
     }
@@ -133,11 +127,7 @@ public class AddReminder extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar c = Calendar.getInstance();
-                c.set(tempYear,tempMonth,tempDay, tempHour, tempMinute);
-                selectedDate = c.getTime();
-                String dateOut = sdfDate.format(selectedDate);
-                chosenDateText.setText(dateOut);
+                updateReminderTime();
                 calDialog.dismiss();
             }
         });

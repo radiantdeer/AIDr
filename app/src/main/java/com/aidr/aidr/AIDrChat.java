@@ -50,6 +50,7 @@ public class AIDrChat extends FragmentActivity {
         });
 
         DiseaseDB.initialize(this);
+        ReminderDB.initialize(this);
     }
 
     @Override

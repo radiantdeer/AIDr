@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aidr.aidr.Model.Reminder;
 import com.aidr.aidr.R;
+import com.aidr.aidr.ReminderDB;
 import com.aidr.aidr.ReminderFragment;
 
 import org.json.JSONArray;
@@ -87,6 +89,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    /*
                                     ArrayList<JSONObject> list = new ArrayList<>();
 
                                     for (int j = 0; j < reminders.length(); j++) {
@@ -95,9 +98,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-                                    }
+                                    }*/
 
-                                    list.remove(getAdapterPosition());
+                                    // Assuming ReminderAdapter is listing reminders as-is
+                                    ReminderDB.deleteReminderByPos(getAdapterPosition(),true);
+                                    ReminderDB.cancelNotification(getAdapterPosition());
+
+                                    /*list.remove(getAdapterPosition());
                                     ReminderFragment.currReminders = new JSONArray(list);
                                     reminders = new JSONArray(list);
 
@@ -116,6 +123,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Holder
                                             e.printStackTrace();
                                         }
                                     }
+                                    */
 
                                     notifyDataSetChanged();
                                 }

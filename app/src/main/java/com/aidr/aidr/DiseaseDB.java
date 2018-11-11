@@ -22,6 +22,7 @@ public class DiseaseDB {
     } */
 
     public static void initialize(Context context) {
+        System.out.println("Initializing DiseaseDB...");
         AssetManager am = context.getAssets();
 
         /* Loading disease database */
