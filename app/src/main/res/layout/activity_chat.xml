@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:layout_above="@+id/input"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="6dp"
         android:layout_marginBottom="8dp"
         app:incomingDefaultBubbleColor="#c9cdd3"
@@ -56,6 +56,21 @@
 
     <ImageButton
         android:id="@+id/attachButton"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/input"
+        app:layout_constraintTop_toBottomOf="@+id/messagesList"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_attach_file_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/switchModeButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -63,24 +78,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/switchModeButton"
-        app:layout_constraintStart_toEndOf="@+id/input"
-        app:layout_constraintTop_toBottomOf="@+id/messagesList"
-        app:srcCompat="@drawable/ic_attach_file_black_24dp" />
-
-    <ImageButton
-        android:id="@+id/switchModeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:onClick="switchMode"
+        android:onClick="sendOrVoiceButtonHandler"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/attachButton"
         app:layout_constraintTop_toBottomOf="@+id/messagesList"
         app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
 
@@ -99,5 +100,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesList"
         app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="AIDr"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/backButton"
+        app:layout_constraintStart_toEndOf="@+id/backButton"
+        app:layout_constraintTop_toTopOf="@+id/backButton" />
 
 </android.support.constraint.ConstraintLayout>

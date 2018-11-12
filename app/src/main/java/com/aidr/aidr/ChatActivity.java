@@ -11,6 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,6 +53,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private MessagesListAdapter<Message> adapter; // Adapter for viewing messages in chatList
     private boolean speechMode = true; // Mode state
+    private boolean sendMode = false;
     private MessageInput chatInput;
     private MessagesList chatList;
     private ImageButton attachFileBtn;
@@ -107,7 +110,10 @@ public class ChatActivity extends AppCompatActivity {
         chatInput.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(final CharSequence input) {
-                sendMessage(input.toString());
+                String temp = input.toString();
+                if (!temp.isEmpty()) {
+                    sendMessage(temp);
+                }
                 return true;
             }
         });
@@ -124,6 +130,38 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        chatList.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                chatList.smoothScrollToPosition(0);
+            }
+        });
+
+        /* Listener when user inputs something in text box, the "voice-switch" button will change into a send button */
+        chatInput.getInputEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() != 0) {
+                    sendMode = true;
+                    switchModeBtn.setImageResource(R.drawable.ic_send_black_24dp);
+                } else {
+                    sendMode = false;
+                    switchModeBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        /* Speech-related stuff down below */
         final Message listenPlaceholder = new Message("Listening...","spch",user,new Date());
         final Message processingPlaceholder = new Message("Processing...","spch",user,new Date());
 
@@ -324,6 +362,17 @@ public class ChatActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /* Button handler for switchButton, because it also serves the purpose as a send button */
+    public void sendOrVoiceButtonHandler(View view) {
+        if (sendMode) {
+            chatInput.getButton().callOnClick();
+            sendMode = false;
+            switchModeBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
+        } else {
+            switchMode(view);
         }
     }
 
