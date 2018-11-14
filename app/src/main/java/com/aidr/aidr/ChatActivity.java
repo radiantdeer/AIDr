@@ -501,7 +501,7 @@ public class ChatActivity extends AppCompatActivity {
                     addMessage(m);
 
                 // Show drugs available to a disease
-                } else if (forChecksOnly.contains("what") && (forChecksOnly.contains("drug") || forChecksOnly.contains("medicine")) && (forChecksOnly.contains("take")) && currDisease != -1) {
+                } else if ((currDisease != -1) && forChecksOnly.contains("what") && (forChecksOnly.contains("drug") || forChecksOnly.contains("medicine")) && forChecksOnly.contains("take")) {
                     String disName = DiseaseDB.getDiseaseNameById(currDisease);
                     JSONArray temp = DiseaseDB.getDrugsByDiseaseId(currDisease);
                     if (temp.length() <= 0) {
@@ -520,6 +520,18 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+                // Show tips if user is conflicted to a disease
+                } else if ((currDisease != -1) && forChecksOnly.contains("give") && forChecksOnly.contains("tip")) {
+                    String tips = DiseaseDB.getTipsByDiseaseId(currDisease);
+                    if (tips != null) {
+                        m = new Message(tips,"tps",system,new Date());
+                        addMessage(m);
+                        m = new Message("I hope that helps!","tps",system,new Date());
+                    } else {
+                        m = new Message("I'm sorry, I currently do not have any tips for that disease...","tps",system,new Date());
+                    }
+                    addMessage(m);
 
                 // gimmick - reply back with "You're welcome!" when user says "Thanks!", or "Thank you!"
                 } else if (forChecksOnly.contains("thanks") || (forChecksOnly.contains("thank") && forChecksOnly.contains("you"))) {

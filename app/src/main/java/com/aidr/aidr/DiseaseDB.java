@@ -13,8 +13,10 @@ public class DiseaseDB {
 
     private static String diseaseFilename = "diseases.json";
     private static String drugFilename = "drugs.json";
+    private static String tipsDir = "tips/";
     private static JSONArray diseaseEntries = new JSONArray();
     private static JSONArray drugEntries = new JSONArray();
+    private static Context context;
 
     /*
     private DiseaseDB() {
@@ -22,8 +24,9 @@ public class DiseaseDB {
     } */
 
     public static void initialize(Context context) {
+        DiseaseDB.context = context;
         System.out.println("Initializing DiseaseDB...");
-        AssetManager am = context.getAssets();
+        AssetManager am = DiseaseDB.context.getAssets();
 
         /* Loading disease database */
         InputStream fin = null;
@@ -233,6 +236,30 @@ public class DiseaseDB {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return out;
+    }
+
+    /* Loads tips from file for a certain disease
+       If disease is not valid, it will return null */
+    public static String getTipsByDiseaseId(int id) {
+        JSONObject disease = getDiseaseById(id);
+        String out = null;
+
+        if (disease != null) {
+            try {
+                String tipsFilename = disease.getString("tips");
+                if (!tipsFilename.equals("")) {
+                    AssetManager am = context.getAssets();
+                    InputStream fin = am.open(tipsDir + tipsFilename);
+                    byte[] bytes = IOUtils.toByteArray(fin);
+                    out = new String(bytes);
+                }
+            } catch (Exception e) {
+                // ignore, move along... Because it shouldn't happen
                 e.printStackTrace();
             }
         }
