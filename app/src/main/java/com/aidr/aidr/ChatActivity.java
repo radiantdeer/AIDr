@@ -552,6 +552,23 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     addMessage(m);
 
+                } else if (forChecksOnly.contains("what") && (forChecksOnly.contains("can") && (forChecksOnly.contains("do")))) {
+                    m = new Message("I can diagnose diseases based on the symptoms you gave to me. Just tell me a symptom, and I'll try to figure out from there (by asking to you, of course...)","h1",system,new Date());
+                    addMessage(m);
+                    (new Handler()).postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            Message m = new Message("I can also show you locations of nearest hospital.","h2",system,new Date());
+                            addMessage(m);
+                            (new Handler()).postDelayed(new Runnable(){
+                                @Override
+                                public void run() {
+                                    Message m = new Message("If you want to know about a disease, medicines that is effective against that disease, and tips for coping with that disease, I can also tell you that.","h2",system,new Date());
+                                    addMessage(m);
+                                }
+                            },1000);
+                        }
+                    },1000);
                 // Else, just mirrors user's message
                 } else {
                     m = new Message("You sent : " + query, "lel", system, new Date());
